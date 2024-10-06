@@ -25,6 +25,7 @@ class Snackbar {
   }
 
   static show(ABC abc, String msg, {required bool success}) {
+    print(msg);
     final snackBar = success
         ? SnackBar(content: Text(msg), backgroundColor: Colors.blue)
         : SnackBar(content: Text(msg), backgroundColor: Colors.red);
@@ -32,7 +33,6 @@ class Snackbar {
     getSnackbar(abc).currentState?.showSnackBar(snackBar);
   }
 }
-
 
 String prettyException(String prefix, dynamic e) {
   if (e is FlutterBluePlusException) {

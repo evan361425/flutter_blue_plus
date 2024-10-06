@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
-import 'device_screen.dart';
-import '../utils/snackbar.dart';
-import '../widgets/system_device_tile.dart';
-import '../widgets/scan_result_tile.dart';
 import '../utils/extra.dart';
+import '../utils/snackbar.dart';
+import '../widgets/scan_result_tile.dart';
+import '../widgets/system_device_tile.dart';
+import 'device_screen.dart';
 
 class ScanScreen extends StatefulWidget {
   const ScanScreen({Key? key}) : super(key: key);
@@ -54,8 +54,8 @@ class _ScanScreenState extends State<ScanScreen> {
   Future onScanPressed() async {
     try {
       // `withServices` is required on iOS for privacy purposes, ignored on android.
-      var withServices = [Guid("180f")]; // Battery Level Service
-      _systemDevices = await FlutterBluePlus.systemDevices(withServices);
+      // var withServices = [Guid("180f")]; // Battery Level Service
+      _systemDevices = await FlutterBluePlus.systemDevices([]);
     } catch (e) {
       Snackbar.show(ABC.b, prettyException("System Devices Error:", e), success: false);
     }
@@ -72,6 +72,10 @@ class _ScanScreenState extends State<ScanScreen> {
   Future onStopPressed() async {
     try {
       FlutterBluePlus.stopScan();
+      _isScanningSubscription.cancel();
+      setState(() {
+        _isScanning = false;
+      });
     } catch (e) {
       Snackbar.show(ABC.b, prettyException("Stop Scan Error:", e), success: false);
     }

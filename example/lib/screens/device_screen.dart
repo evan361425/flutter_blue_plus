@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
-import '../widgets/service_tile.dart';
+import '../utils/extra.dart';
+import '../utils/snackbar.dart';
 import '../widgets/characteristic_tile.dart';
 import '../widgets/descriptor_tile.dart';
-import '../utils/snackbar.dart';
-import '../utils/extra.dart';
+import '../widgets/service_tile.dart';
 
 class DeviceScreen extends StatefulWidget {
   final BluetoothDevice device;
@@ -136,7 +136,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
 
   Future onRequestMtuPressed() async {
     try {
-      await widget.device.requestMtu(223, predelay: 0);
+      _mtuSize = await widget.device.requestMtu(503, predelay: 0);
       Snackbar.show(ABC.c, "Request Mtu: Success", success: true);
     } catch (e) {
       Snackbar.show(ABC.c, prettyException("Change Mtu Error:", e), success: false);
@@ -158,6 +158,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
     return CharacteristicTile(
       characteristic: c,
       descriptorTiles: c.descriptors.map((d) => DescriptorTile(descriptor: d)).toList(),
+      device: widget.device,
     );
   }
 

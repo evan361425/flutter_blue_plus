@@ -138,7 +138,7 @@ class BmScanAdvertisement {
     Map<Guid, Uint8List> serviceData = rawServiceData.cast<Guid, Uint8List>();
 
     // Cast the data to the right type
-    List<Guid> serviceUuids = rawServiceUuids.map((e) => Guid(e)).toList();
+    List<Guid> serviceUuids = (rawServiceUuids as List<dynamic>).map((e) => Guid(e)).toList().cast<Guid>();
 
     return BmScanAdvertisement(
       remoteId: DeviceIdentifier(json['remote_id']),
