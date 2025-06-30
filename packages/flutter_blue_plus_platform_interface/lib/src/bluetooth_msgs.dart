@@ -48,8 +48,8 @@ class BmMsdFilter {
   Map<dynamic, dynamic> toMap() {
     final Map<dynamic, dynamic> map = {};
     map['manufacturer_id'] = manufacturerId;
-    map['data'] = data ?? Uint8List.fromList([]);
-    map['mask'] = mask ?? Uint8List.fromList([]);
+    map['data'] = data ?? Uint8List(0);
+    map['mask'] = mask ?? Uint8List(0);
     return map;
   }
 }
@@ -150,14 +150,16 @@ class BmScanAdvertisement {
   factory BmScanAdvertisement.fromMap(Map<dynamic, dynamic> json) {
     // Get raw data
     Map<Object?, Object?> rawManufacturerData = json['manufacturer_data'] ?? <int, Uint8List>{};
-    Map<Object?, Object?> rawServiceData = json['service_data'] ?? <int, Uint8List>{};
+    Map<Object?, Object?> rawServiceData = json['service_data'] ?? <String, Uint8List>{};
     List<Object?> rawServiceUuids = json['service_uuids'] ?? <String>[];
 
     // Cast the data to the right type
     Map<int, Uint8List> manufacturerData = rawManufacturerData.cast<int, Uint8List>();
 
     // Cast the data to the right type
-    Map<Guid, Uint8List> serviceData = rawServiceData.cast<Guid, Uint8List>();
+    Map<Guid, Uint8List> serviceData = {
+      for (final e in rawServiceData.entries) Guid(e.key.toString()): e.value as Uint8List,
+    };
 
     // Cast the data to the right type
     List<Guid> serviceUuids = rawServiceUuids.cast<String>().map((e) => Guid(e)).toList();

@@ -523,14 +523,14 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
         {
             // See BmWriteCharacteristicRequest
             NSDictionary *args = (NSDictionary*)call.arguments;
-            NSString  *remoteId             = args[@"remote_id"];
-            NSString  *characteristicUuid   = args[@"characteristic_uuid"];
-            NSString  *serviceUuid          = args[@"service_uuid"];
-            NSString  *secondaryServiceUuid = args[@"secondary_service_uuid"];
-            NSNumber  *writeTypeNumber      = args[@"write_type"];
-            NSNumber  *allowLongWrite       = args[@"allow_long_write"];
-            NSData    *value                = args[@"value"];
-            NSNumber  *instanceId           = args[@"instance_id"];
+            NSString  *remoteId           = args[@"remote_id"];
+            NSString  *serviceUuid        = args[@"service_uuid"];
+            NSString  *characteristicUuid = args[@"characteristic_uuid"];
+            NSString  *primaryServiceUuid = args[@"primary_service_uuid"];
+            NSNumber  *writeTypeNumber    = args[@"write_type"];
+            NSNumber  *allowLongWrite     = args[@"allow_long_write"];
+            NSData    *value              = args[@"value"];
+            NSNumber  *instanceId         = args[@"instance_id"];
             
             // Find peripheral
             CBPeripheral *peripheral = [self getConnectedPeripheral:remoteId];
@@ -657,13 +657,13 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
         {
             // See BmWriteDescriptorRequest
             NSDictionary *args = (NSDictionary*)call.arguments;
-            NSString  *remoteId             = args[@"remote_id"];
-            NSString  *descriptorUuid       = args[@"descriptor_uuid"];
-            NSString  *serviceUuid          = args[@"service_uuid"];
-            NSString  *secondaryServiceUuid = args[@"secondary_service_uuid"];
-            NSString  *characteristicUuid   = args[@"characteristic_uuid"];
-            NSData    *value                = args[@"value"];
-            NSNumber  *instanceId           = args[@"instance_id"];
+            NSString  *remoteId           = args[@"remote_id"];
+            NSString  *serviceUuid        = args[@"service_uuid"];
+            NSString  *characteristicUuid = args[@"characteristic_uuid"];
+            NSString  *descriptorUuid     = args[@"descriptor_uuid"];
+            NSString  *primaryServiceUuid = args[@"primary_service_uuid"];
+            NSData    *value              = args[@"value"];
+            NSNumber  *instanceId         = args[@"instance_id"];
 
             // Find peripheral
             CBPeripheral *peripheral = [self getConnectedPeripheral:remoteId];
@@ -1495,15 +1495,15 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
 
     // See BmCharacteristicData
     NSMutableDictionary* result = [@{
-        @"remote_id":               [peripheral.identifier UUIDString],
-        @"service_uuid":            [characteristic.service.UUID uuidStr],
-        @"characteristic_uuid":     [characteristic.UUID uuidStr],
-        @"primary_service_uuid":    primaryService ? [primaryService.UUID uuidStr] : [NSNull null],
-        @"value":                   characteristic.value,
-        @"success":                 error == nil ? @(1) : @(0),
-        @"error_string":            error ? [error localizedDescription] : @"success",
-        @"error_code":              error ? @(error.code) : @(0),
-        @"instance_id":             instanceId ? instanceId : [NSNull null],
+        @"remote_id":            [peripheral.identifier UUIDString],
+        @"service_uuid":         [characteristic.service.UUID uuidStr],
+        @"characteristic_uuid":  [characteristic.UUID uuidStr],
+        @"primary_service_uuid": primaryService ? [primaryService.UUID uuidStr] : [NSNull null],
+        @"value":                characteristic.value,
+        @"success":              error == nil ? @(1) : @(0),
+        @"error_string":         error ? [error localizedDescription] : @"success",
+        @"error_code":           error ? @(error.code) : @(0),
+        @"instance_id":          instanceId ? instanceId : [NSNull null],
     } mutableCopy];
 
     // remove if null
@@ -1847,6 +1847,7 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
 
         // trim off first 2 bytes
         NSData* trimmed = [manufData subdataWithRange:NSMakeRange(2, manufData.length - 2)];
+
         manufDataB = @{
             @(manufId): trimmed,
         };
