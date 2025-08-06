@@ -1,60 +1,46 @@
+plugins {
+  id "com.android.application"
+  id "kotlin-android"
+  id "dev.flutter.flutter-gradle-plugin"
+}
+
 def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
-    }
-}
-
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-}
-
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
-
-apply plugin: 'com.android.application'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+rootProject.file('local.properties').withInputStream { localProperties.load(it) }
 
 android {
-    compileSdkVersion 34
+  namespace "com.lib.flutter_blue_plus_example"
+  compileSdkVersion flutter.compileSdkVersion
+  ndkVersion flutter.ndkVersion
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
 
-    defaultConfig {
-        applicationId "com.lib.flutter_blue_plus_example"
-        minSdkVersion 21
-        targetSdkVersion 34
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
-    }
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_17
+  }
 
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
-            // FIXME: Work-around for https://github.com/pauldemarco/flutter_blue/issues/772
-            shrinkResources false
-            minifyEnabled false
-        }
-    }
+  sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+  }
 
-    // Conditional for compatibility with AGP <4.2.
-    if (project.android.hasProperty("namespace")) {
-        namespace 'com.lib.flutter_blue_plus_example'
+  defaultConfig {
+    applicationId "com.lib.flutter_blue_plus_example"
+    minSdk =  flutter.minSdkVersion
+    targetSdkVersion flutter.targetSdkVersion
+    multiDexEnabled true
+    versionCode 21100004
+    versionName "2.11.0"
+  }
+
+  buildTypes {
+    release {
+      signingConfig signingConfigs.debug
+      shrinkResources false
+      minifyEnabled false
     }
+  }
 }
 
 flutter {

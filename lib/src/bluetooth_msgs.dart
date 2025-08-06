@@ -127,16 +127,19 @@ class BmScanAdvertisement {
 
   factory BmScanAdvertisement.fromMap(Map<dynamic, dynamic> json) {
     // Get raw data
-    var rawManufacturerData = json['manufacturer_data'] ?? {};
-    var rawServiceData = json['service_data'] ?? {};
-    var rawServiceUuids = json['service_uuids'] ?? [];
+    Map rawManufacturerData = json['manufacturer_data'] ?? {};
+    Map rawServiceData = json['service_data'] ?? {};
+    List rawServiceUuids = json['service_uuids'] ?? [];
 
     // Cast the data to the right type
+    print(rawManufacturerData);
     Map<int, List<int>> manufacturerData =
-        rawManufacturerData.map((k, v) => MapEntry(k as int, (v as Uint8List).toList()));
+        rawManufacturerData.cast<int, Uint8List>().map((k, v) => MapEntry(k, v.toList()));
 
     // Cast the data to the right type
-    Map<Guid, List<int>> serviceData = rawServiceData.map((k, v) => MapEntry(k as Guid, (v as Uint8List).toList()));
+    print(rawServiceData);
+    Map<Guid, List<int>> serviceData =
+        rawServiceData.cast<String, Uint8List>().map((k, v) => MapEntry(Guid(k), v.toList()));
 
     // Cast the data to the right type
     List<Guid> serviceUuids = rawServiceUuids.cast<String>().map((e) => Guid(e)).toList();
